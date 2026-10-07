@@ -32,7 +32,7 @@ import {
 } from "recharts";
 import "./App.css";
 
-const API = "http://127.0.0.1:5000/api";
+const API = "https://bankshield-api-jbvu.onrender.com/api";
 
 function App() {
   const [page, setPage] = useState("dashboard");

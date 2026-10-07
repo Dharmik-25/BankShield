@@ -1,0 +1,15 @@
+html {
+  background: #07101d;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #07101d;
+}
+
+#root {
+  min-height: 100vh;
+}

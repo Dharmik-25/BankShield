@@ -4,6 +4,10 @@
     image: bankshield-backend:ci
     ports:
       - "5000:5000"
+    volumes:
+      - bankshield-data:/app/data
+    environment:
+      - BANKSHIELD_DB=/app/data/bankshield.db
     restart: unless-stopped
 
   frontend:
@@ -17,3 +21,7 @@
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  bankshield-data:
+

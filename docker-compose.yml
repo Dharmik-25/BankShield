@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend
+    container_name: bankshield-backend
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: bankshield-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

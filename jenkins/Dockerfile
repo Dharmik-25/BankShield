@@ -14,4 +14,7 @@ RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-27.
     install -m 755 /tmp/docker/docker /usr/local/bin/docker && \
     rm -rf /tmp/docker /tmp/docker.tgz
 
+RUN curl -fsSL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+    | sh -s -- -b /usr/local/bin v0.76.0
+
 USER jenkins

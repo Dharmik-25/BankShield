@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    options {
+        timestamps()
+        skipDefaultCheckout(true)
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -11,29 +16,22 @@ pipeline {
         stage('Verify Source') {
             steps {
                 sh '''
-                    echo "BankShield DevSecOps CI/CD"
-                    ls -la
                     test -f backend/app.py
-                    test -f frontend/package.json
                     test -f backend/Dockerfile
+                    test -f frontend/package.json
                     test -f frontend/Dockerfile
+                    echo "Source verification passed"
                 '''
             }
         }
 
-        stage('Python Syntax Check') {
+        stage('Backend Tests') {
             steps {
                 sh '''
-                    python3 -m py_compile backend/app.py backend/database.py backend/risk_engine.py backend/test_backend.py
-                '''
-            }
-        }
-
-        stage('Backend Unit Tests') {
-            steps {
-                sh '''
+                    python3 -m venv /tmp/bankshield-venv
+                    /tmp/bankshield-venv/bin/pip install -r backend/requirements.txt
                     cd backend
-                    python3 -m unittest discover -p "test_backend.py" -v
+                    /tmp/bankshield-venv/bin/python -m unittest discover -p "test_backend.py" -v
                 '''
             }
         }
@@ -48,19 +46,32 @@ pipeline {
             }
         }
 
-        stage('Deployment') {
+        stage('Docker Build') {
             steps {
-                echo 'BankShield passed the automated build and test stages.'
+                sh '''
+                    docker build -t bankshield-backend:ci backend
+                    docker build -t bankshield-frontend:ci frontend
+                '''
+            }
+        }
+
+        stage('Deployment Verification') {
+            steps {
+                sh '''
+                    docker image inspect bankshield-backend:ci
+                    docker image inspect bankshield-frontend:ci
+                    echo "Docker images built and verified"
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'BankShield CI/CD pipeline completed successfully.'
+            echo 'SUCCESS: BankShield CI pipeline passed.'
         }
         failure {
-            echo 'Pipeline failed. Review the console output.'
+            echo 'FAILED: Check console output.'
         }
     }
 }

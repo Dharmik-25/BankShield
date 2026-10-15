@@ -1,16 +1,19 @@
-services:
+﻿services:
   backend:
     build: ./backend
-    container_name: bankshield-backend
+    image: bankshield-backend:ci
     ports:
       - "5000:5000"
     restart: unless-stopped
 
   frontend:
-    build: ./frontend
-    container_name: bankshield-frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000/api
+    image: bankshield-frontend:ci
     ports:
-      - "8080:80"
+      - "8082:80"
     depends_on:
       - backend
     restart: unless-stopped

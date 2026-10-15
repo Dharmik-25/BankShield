@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py database.py risk_engine.py ./
-COPY bankshield.db ./
+COPY bankshield.db test_backend.py ./
 
 EXPOSE 5000
 
